@@ -1,0 +1,23 @@
+{
+  "name": "primereminderbot",
+  "version": "1.0.0",
+  "description": "Twitch Bot to assist with managing subscriptions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adamosimpson21/primereminderbot.git"
+  },
+  "author": "BandsWithLegends",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adamosimpson21/primereminderbot/issues"
+  },
+  "homepage": "https://github.com/adamosimpson21/primereminderbot#readme",
+  "dependencies": {
+    "npm": "^6.5.0",
+    "tmi.js": "^1.2.1"
+  }
+}
