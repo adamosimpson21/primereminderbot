@@ -26,6 +26,8 @@ client.on("chat", function(channel, user, message, self){
 
 })
 
+
+
 client.on("subscription", (channel, username, method, message, user) => {
   if(method.prime){
     client.whisper("#bandswithlegends", "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.");
