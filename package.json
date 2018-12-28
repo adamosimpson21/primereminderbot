@@ -4,7 +4,7 @@
   "description": "Twitch Bot to assist with managing subscriptions",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/adamosimpson21/primereminderbot#readme",
   "dependencies": {
+    "jest": "^23.6.0",
     "npm": "^6.5.0",
     "tmi.js": "^1.2.1"
   }
