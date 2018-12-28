@@ -1,5 +1,8 @@
 const tmi = require("tmi.js");
 
+const thirtyDaysInMilliseconds = 2.592e+9;
+const oneHourInMilliseconds = 3.6e+6;
+
 const options = {
   options:{
     debug:true
@@ -37,14 +40,26 @@ client.on("subscription", (channel, username, method, message, user) => {
 
 
 
-//on subscription
-//if(method.prime){
-//client.message(self, Hello, I see you subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.
-//setTimout(
-//
-//
-//
-//}
-//
-//
+// on subscription
+if(method.prime){
+// client.message(self, Hello, I see you subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.
+// add to database
+  database.write({username, channel, lastSubbed: new Date.now(), blacklist: false})
+
+
+}
+
+// every hour
+for(let entry in database){
+  const {blacklist, username, channel, lastSubbed } = entry;
+  const oneMonthOld = (dateNumber) => (dateNumber + thirtyDaysInMilliseconds) <= new Date.now() && new Date.now() <= (dateNumber + thirtyDaysInMilliseconds + oneHourInMilliseconds);
+
+
+  if(!blacklist && oneMonthOld(lastSubbed)){
+    client.whisper(username, ``)
+  }
+}
+
+
+
 
