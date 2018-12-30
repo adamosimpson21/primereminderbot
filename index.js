@@ -1,4 +1,5 @@
 const tmi = require("tmi.js");
+const password = require("password");
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
@@ -13,9 +14,9 @@ const options = {
   },
   identity:{
     username: "primereminderbot1",
-    password: "oauth:xmea5famfgp3khmxv6f2ztoywdqus2"
+    password: password
   },
-  channels: ["#BandsWithLegends", "#tvgbadger", "#calebdmtg"]
+  channels: ["#BandsWithLegends"]
 };
 
 const client = new tmi.client(options);
@@ -32,9 +33,16 @@ client.on("chat", function(channel, user, message, self){
 // See when someone subscribes with twitch prime
 client.on("subscription", (channel, username, method, message, user) => {
   if(method.prime){
-    client.whisper("#bandswithlegends", "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.");
-    // add to database
-    database.write({username, channel, lastSubbed: Date.now(), blacklist: false})
+    console.log("user info: ", channel, username, method, message, user);
+    console.log("database[username]: ", database[username]);
+    if(database[username] && database[username].blacklist) return null;
+    else if(database[username] && !database[username].blacklist){
+      client.whisper(database[username].username, `Thanks, ${database[username].username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`)
+      database[username].lastSubbed = Date.now();
+    } else {
+      client.whisper(database[username].username, "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.");
+      database.username = {username, channel, lastSubbed: Date.now(), blacklist: false}
+    }
   }
 })
 
