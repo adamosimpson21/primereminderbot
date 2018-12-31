@@ -1,4 +1,4 @@
-const {oneMonthOld, checkDatabase, thirtyDaysInMilliseconds, oneHourInMilliseconds} = require("./index");
+const {oneMonthOld, checkDatabase, thirtyDaysInMilliseconds, oneHourInMilliseconds, formatChannelName} = require("./index");
 
 const oldDate = Date.now() - thirtyDaysInMilliseconds - thirtyDaysInMilliseconds;
 const oneMonthAndOneHourAgo = Date.now() - thirtyDaysInMilliseconds + oneHourInMilliseconds;
@@ -31,4 +31,16 @@ test('one month old(dateNow) === false', () => {
 
 test('one month old(futureDate) === false', () => {
   expect(oneMonthOld(futureDate)).toBe(false)
+})
+
+test('formatChannelName returns correct name', () => {
+  expect(formatChannelName('#bandswithlegends')).toBe('bandswithlegends')
+})
+
+test('formatChannelName returns correct name', () => {
+  expect(formatChannelName('bandswithlegends')).toBe('bandswithlegends')
+})
+
+test('formatChannelName returns correct name', () => {
+  expect(formatChannelName('##bandswithlegends')).toBe('#bandswithlegends')
 })
