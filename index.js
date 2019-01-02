@@ -1,12 +1,12 @@
 const tmi = require("tmi.js");
 const {password} = require("./password");
 
-// const thirtyDaysInMilliseconds = 2.592e+9;
-// const oneHourInMilliseconds = 3.6e+6;
+const thirtyDaysInMilliseconds = 2.592e+9;
+const oneHourInMilliseconds = 3.6e+6;
 
 //testing times
-const thirtyDaysInMilliseconds = 1000*60;
-const oneHourInMilliseconds = 1000*5;
+// const thirtyDaysInMilliseconds = 1000*60;
+// const oneHourInMilliseconds = 1000*5;
 
 const database = {};
 
