@@ -1,6 +1,7 @@
 const tmi = require("tmi.js");
 const {password} = require("./password");
-const database = require("mongoose")
+const database = require("mongoose");
+const {createSub, changeBlackList, reSubbed, findSub} = require('./handlers');
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
@@ -32,20 +33,33 @@ client.connect();
 // See when someone subscribes with twitch prime
 // client.on("subscription", (channel, username, method, message, user) => {
 
-client.on("chat", (channel, user, message, self) => {
+client.on("chat", async (channel, user, message, self) => {
   if(self) return;
-  const {username} = user
+  const {username} = user;
   // if(method==="prime"){
-  if(message==="prime" && username==='bandswithlegends'){
-    if(database[username] && database[username].blacklist) return null;
-    else if(database[username] && !database[username].blacklist){
-      client.whisper(database[username].username, `Thanks, ${database[username].username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`)
-      database[username].lastSubbed = Date.now();
-      database[username].channel = channel;
+  let foundSub = await findSub(username);
+  console.log("FoundSub: ", foundSub);
+  let foundSubUserName = foundSub.username;
+  console.log("foundSubUserName: ", foundSubUserName);
+  if(message==="prime" && foundSub && foundSubUserName==='bandswithlegends'){
+    if(foundSubUserName && foundSub.blacklist) return null;
+    else if(foundSubUserName && !foundSub.blacklist){
+      reSubbed(username, channel)
+        .then(sub => {
+          console.log("Resubbed :", sub)
+          client.whisper(username, `Thanks, ${username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`)
+        })
+        .catch(err => {
+          console.log("Error in Resub: ", err)
+        })
     } else {
-      database[username] = {username, channel, lastSubbed: Date.now(), blacklist: false}
-      client.whisper(database[username].username, "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.");
-    }
+      createSub(username, channel)
+        .then(sub => {
+          console.log("new sub:", sub)
+          client.whisper(username, "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.");
+        })
+        .catch(err => console.log("Error in new sub:", err));
+      }
   }
 })
 

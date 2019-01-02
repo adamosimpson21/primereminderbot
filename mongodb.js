@@ -25,4 +25,4 @@ const subSchema = new mongoose.Schema({
   }
 })
 
-mongoose.model("sub", subSchema)
+mongoose.model("Sub", subSchema)
