@@ -63,24 +63,38 @@ client.on("chat", async (channel, user, message, self) => {
   }
 })
 
-client.on("whisper", (from, userstate, message, self) => {
+client.on("whisper", async (from, userstate, message, self) => {
   if(self) return;
   const {username} = userstate
-  if(!database[username]){
-    client.whisper(username, "Sorry, couldn't find you in the database. Subscribe with Twitch Prime to begin service")
+  let foundSub = await findSub(username);
+  if(!foundSub){
+    if(message === '!info'){
+    } else {
+      client.whisper(username, "Sorry, couldn't find you in the database. Subscribe with Twitch Prime to begin service")
+    }
   } else {
     if(message === '!stop'){
-        database[username].blacklist = true;
-        client.whisper(username, "Service Stopped. If you'd like to restart service message me !start ")
+      changeBlackList(username, true)
+        .then(sub => {
+          client.whisper(sub.username, "Service Stopped. If you'd like to restart service message me !start ")
+          console.log("BlackList===true:", sub);
+        })
+        .catch(err => console.log("Blacklist change error: ", err))
     } else if(message ==='!start'){
-      if(database[username]){
-        database[username].blacklist = false;
+      changeBlackList(username, false)
+        .then(sub => {
+          client.whisper(sub.username, "Service started")
+          console.log("BlackList===true:", sub);
+        })
+        .catch(err => console.log("Blacklist change error: ", err))
+      if(foundSub){
+        foundSub.blacklist = false;
         client.whisper(username, "Service started")
       }
     } else {
       client.whisper(username, "Sorry, couldn't understand your message. Use !stop or !start to update service")
     }
-  }
+  // }
 })
 
 // checks if a date is between 1 month and 1 month + 1 hour old.
