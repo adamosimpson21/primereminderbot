@@ -1,9 +1,10 @@
-const db = require("mongoose");
-const {thirtyDaysInMilliseconds, oneHourInMilliseconds} = require("./index")
+const db = require("./mongodb");
+const thirtyDaysInMilliseconds = 1000*60;
+const oneHourInMilliseconds = 1000*5;
 
-exports.findSubByTime = async function(interval, currTime = Date.now()){
+exports.findSubByTime = async function(interval){
   try{
-    const minSubTime = currTime-thirtyDaysInMilliseconds
+    const minSubTime = Date.now() - thirtyDaysInMilliseconds;
     return await db.Sub.find({lastSubbed:{$gte:minSubTime, $lte:(minSubTime+interval)}})
   } catch(err){
     return err;
@@ -18,8 +19,9 @@ exports.findSub = async function(username){
   }
 }
 
-exports.createSub = async function(username, lastSubbed = Date.now(), channel, blacklist = false){
+exports.createSub = async function(username, channel, lastSubbed,  blacklist){
   try{
+    console.log("in create sub: ", username, lastSubbed, channel, blacklist)
     return await db.Sub.create({ username, lastSubbed, channel, blacklist});
   } catch (err){
     return err;
@@ -44,4 +46,4 @@ exports.reSubbed = async function(username, channel){
 
 
 
-modules.exports = exports;
+module.exports = exports;
