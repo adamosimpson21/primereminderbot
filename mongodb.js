@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 mongoose.set('debug', process.env.NODE_ENV==='development');
-mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/primeRemind')
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/primeRemind')
 
 mongoose.Promise = Promise;
 
