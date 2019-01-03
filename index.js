@@ -36,29 +36,21 @@ client.connect();
   // if(method==="prime"){
 client.on("chat", async (channel, user, message, self) => {
   const {username} = user;
-  let foundSub = await findSub(username);
-  let foundSubUserName = foundSub ? foundSub.username : undefined;
   if(message==="prime"){
-    if(foundSubUserName && foundSub.blacklist){
-      return null;
-    } else if(foundSubUserName && !foundSub.blacklist){
+    let foundSub = await findSub(username);
+    if(foundSub){
       reSubbed(username, channel)
-        .then(sub => {
-          console.log("Resubbed :", sub)
-          client.whisper(username, `Thanks, ${username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`)
-        })
+        .then(sub => !sub.blacklist && client.whisper(sub.username, `Thanks, ${sub.username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`))
         .catch(err => console.log("Error in Resub: ", err))
     } else {
       createSub(username, channel, Date.now(), false)
-        .then(sub => {
-          console.log("new sub:", sub)
-          client.whisper(username, "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me.");
-        })
+        .then(sub => client.whisper(sub.username, "Hello, You subbed with Twitch Prime. If you'd like, I'll message you in 30 days to remind you to sub with Twitch Prime again. If not, simply message me back !stop and you will not receive any more messages from me."))
         .catch(err => console.log("Error in new sub:", err));
     }
   }
 })
 
+// whisper commands
 client.on("whisper", async (from, userstate, message, self) => {
   if(self) return;
   const {username} = userstate
@@ -68,15 +60,11 @@ client.on("whisper", async (from, userstate, message, self) => {
     client.whisper(username, "Contact the maintainer of this bot through http://www.bandswithlegends.com/ , or @BandsWithLegends on Twitch, Twitter, Youtube, or Discord")
   } else if(message === '!stop'){
     changeBlackList(username, true)
-      .then(sub => {
-        client.whisper(sub.username, "Service Stopped. If you'd like to restart service message me !start ")
-      })
+      .then(sub => client.whisper(sub.username, "Service Stopped. If you'd like to restart service message me !start "))
       .catch(err => console.log("Blacklist change error: ", err))
   } else if(message ==='!start'){
     changeBlackList(username, false)
-      .then(sub => {
-        client.whisper(sub.username, "Service started")
-      })
+      .then(sub => client.whisper(sub.username, "Service started"))
       .catch(err => console.log("Blacklist change error: ", err))
   } else {
     client.whisper(username, unknownMessage)
@@ -91,10 +79,8 @@ const formatChannelName = channel => channel[0] ==="#" ? channel.slice(1) : chan
 
 // every hour check to see whose re-subscription is available
 function checkDatabase(){
-  console.log("checking database: ", Date.now());
   findSubByTime(oneHourInMilliseconds)
     .then(availableSubs => {
-      console.log("availableSubs: ", availableSubs)
       if(availableSubs.length >= 0) {
         availableSubs.forEach(user => {
           const {blacklist, username, channel} = user;

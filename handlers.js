@@ -38,7 +38,9 @@ exports.changeBlackList = async function(username, blacklist){
 
 exports.reSubbed = async function(username, channel){
   try{
-    return await db.Sub.findOneAndUpdate({username}, {channel, lastSubbed: Date.now()})
+    const sub = await db.Sub.findOneAndUpdate({username}, {channel, lastSubbed: Date.now()})
+    console.log("in resubbed: ", sub)
+    return sub;
   } catch(err){
     return err;
   }
