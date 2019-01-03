@@ -1,5 +1,5 @@
+require("dotenv").config();
 const tmi = require("tmi.js");
-const {password} = require("./password.js");
 const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
 
 // const thirtyDaysInMilliseconds = 2.592e+9;
@@ -22,7 +22,7 @@ const options = {
   },
   identity:{
     username: "primereminderbot1",
-    password: password
+    password: process.env.PASSWORD
   },
   channels: ["#BandsWithLegends"]
 };

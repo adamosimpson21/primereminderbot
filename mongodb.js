@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
-const {mongoURI} = require('./password.js');
 mongoose.set('debug', process.env.NODE_ENV==='development');
-mongoose.connect(mongoURI || 'mongodb://localhost/primeRemind')
+mongoose.connect(process.env.MONGOURI || 'mongodb://localhost/primeRemind')
 
 mongoose.Promise = Promise;
 
