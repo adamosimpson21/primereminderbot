@@ -1,4 +1,4 @@
-const db = require("./mongodb");
+const db = require("./mongodb.js");
 const thirtyDaysInMilliseconds = 1000*60;
 const oneHourInMilliseconds = 1000*5;
 

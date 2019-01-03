@@ -1,6 +1,6 @@
 const tmi = require("tmi.js");
-const {password} = require("./password");
-const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers');
+const {password} = require("./password.js");
+const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
 
 // const thirtyDaysInMilliseconds = 2.592e+9;
 // const oneHourInMilliseconds = 3.6e+6;
