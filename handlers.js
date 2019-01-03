@@ -1,4 +1,14 @@
 const db = require("mongoose");
+const {thirtyDaysInMilliseconds, oneHourInMilliseconds} = require("./index")
+
+exports.findSubByTime = async function(interval, currTime = Date.now()){
+  try{
+    const minSubTime = currTime-thirtyDaysInMilliseconds
+    return await db.Sub.find({lastSubbed:{$gte:minSubTime, $lte:(minSubTime+interval)}})
+  } catch(err){
+    return err;
+  }
+}
 
 exports.findSub = async function(username){
   try{

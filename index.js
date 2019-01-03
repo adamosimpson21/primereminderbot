@@ -1,17 +1,18 @@
 const tmi = require("tmi.js");
 const {password} = require("./password");
-const database = require("mongoose");
-const {createSub, changeBlackList, reSubbed, findSub} = require('./handlers');
+const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers');
 
-const thirtyDaysInMilliseconds = 2.592e+9;
-const oneHourInMilliseconds = 3.6e+6;
+// const thirtyDaysInMilliseconds = 2.592e+9;
+// const oneHourInMilliseconds = 3.6e+6;
 
 //testing times
-// const thirtyDaysInMilliseconds = 1000*60;
-// const oneHourInMilliseconds = 1000*5;
+const thirtyDaysInMilliseconds = 1000*60;
+const oneHourInMilliseconds = 1000*5;
 
-// const database = {};
+// possible messages
+const unknownMessage = "Sorry, couldn't understand your message. Use !info, !contact, !start, or !stop"
 
+//connecting to twitch client
 const options = {
   options:{
     debug:true
@@ -32,14 +33,13 @@ client.connect();
 
 // See when someone subscribes with twitch prime
 // client.on("subscription", (channel, username, method, message, user) => {
-
+  // if(method==="prime"){
 client.on("chat", async (channel, user, message, self) => {
   if(self) return;
   const {username} = user;
-  // if(method==="prime"){
   let foundSub = await findSub(username);
   console.log("FoundSub: ", foundSub);
-  let foundSubUserName = foundSub.username;
+  let foundSubUserName = foundSub ? foundSub.username : undefined;
   console.log("foundSubUserName: ", foundSubUserName);
   if(message==="prime" && foundSub && foundSubUserName==='bandswithlegends'){
     if(foundSubUserName && foundSub.blacklist) return null;
@@ -69,8 +69,9 @@ client.on("whisper", async (from, userstate, message, self) => {
   let foundSub = await findSub(username);
   if(!foundSub){
     if(message === '!info'){
+      client.whisper(username, "This is the info paragraph!")
     } else {
-      client.whisper(username, "Sorry, couldn't find you in the database. Subscribe with Twitch Prime to begin service")
+      client.whisper(username, unknownMessage)
     }
   } else {
     if(message === '!stop'){
@@ -92,9 +93,9 @@ client.on("whisper", async (from, userstate, message, self) => {
         client.whisper(username, "Service started")
       }
     } else {
-      client.whisper(username, "Sorry, couldn't understand your message. Use !stop or !start to update service")
+      client.whisper(username, unknownMessage)
     }
-  // }
+  }
 })
 
 // checks if a date is between 1 month and 1 month + 1 hour old.
@@ -105,13 +106,17 @@ const formatChannelName = channel => channel[0] ==="#" ? channel.slice(1) : chan
 
 // every hour check to see whose re-subscription is available
 function checkDatabase(){
-  Object.entries(database).forEach(users => {
-    const {blacklist, username, channel, lastSubbed } = users[1];
-    if(!blacklist && oneMonthOld(lastSubbed)){
-      const channelName = formatChannelName(channel);
-      client.whisper(username, `Hey ${username}, your twitch prime sub is available. Last month you subbed to ${channelName}. If you'd like to sub to them again go to https://www.twitch.tv/${channelName} `)
-    }
-  })
+  findSubByTime(oneHourInMilliseconds)
+    .then(availableSubs => {
+      availableSubs.map(user => {
+        const {blacklist, username, channel} = user;
+        if (!blacklist) {
+          const channelName = formatChannelName(channel);
+          client.whisper(username, `Hey ${username}, your twitch prime sub is available. Last month you subbed to ${channelName}. If you'd like to sub to them again go to https://www.twitch.tv/${channelName} `)
+        }
+      })
+    })
+    .catch(err => console.log("Error in check database: ", err))
 }
 
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
