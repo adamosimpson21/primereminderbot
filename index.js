@@ -95,7 +95,6 @@ function checkDatabase(){
     })
     .catch(err => console.log("Error in check database: ", err))
 }
-
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
 
 module.exports = {oneHourInMilliseconds, thirtyDaysInMilliseconds, checkDatabase, oneMonthOld, formatChannelName};
