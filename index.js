@@ -79,8 +79,10 @@ const formatChannelName = channel => channel[0] ==="#" ? channel.slice(1) : chan
 
 // every hour check to see whose re-subscription is available
 function checkDatabase(){
+  console.log("Checking Database: ", Date.now())
   findSubByTime(oneHourInMilliseconds)
     .then(availableSubs => {
+      console.log("AvailableSubs:", availableSubs)
       if(availableSubs.length >= 0) {
         availableSubs.forEach(user => {
           const {blacklist, username, channel} = user;
