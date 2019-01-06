@@ -32,12 +32,12 @@ const options = {
 };
 
 const client = new TwitchJS.client(options);
-console.log("Client:", client);
 
 client.on("connected", function (address, port) {
   console.log("Connected: ", address, port);
   client.whisper("bandswithlegends", `Connected on ${address} ${port}`)
 });
+console.log("Client.getOptions():",client.getOptions());
 // See when someone subscribes with twitch prime
 // client.on("subscription", (channel, username, method, message, user) => {
   // if(method==="prime"){
