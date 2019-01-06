@@ -1,46 +1,46 @@
-require("dotenv").config();
-const tmi = require("tmi.js");
-const TwitchJS = require('twitch-js');
-const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
-
-// const thirtyDaysInMilliseconds = 2.592e+9;
-// const oneHourInMilliseconds = 3.6e+6;
-
-//testing times
-const thirtyDaysInMilliseconds = 1000*60;
-const oneHourInMilliseconds = 1000*5;
-
-// possible messages
-const unknownMessage = "Sorry, couldn't understand your message. Use !info, !contact, !start, or !stop";
-// const port = process.env.PORT;
-
-//connecting to twitch client
-const options = {
-  options:{
-    debug:true
-  },
-  connection:{
-    port: process.env.PORT || 80,
-    secure:false,
-    reconnect:true
-  },
-  identity:{
-    username: "primereminderbot1",
-    password: process.env.PASSWORD
-  },
-  channels: ["#BandsWithLegends"]
-};
-
-const client = new TwitchJS.client(options);
-
-client.on("connected", function (address, port) {
-  console.log("Connected: ", address, port);
-  client.whisper("bandswithlegends", `Connected on ${address} ${port}`)
-});
-console.log("Client.getOptions():",client.getOptions());
-// See when someone subscribes with twitch prime
-// client.on("subscription", (channel, username, method, message, user) => {
-  // if(method==="prime"){
+// require("dotenv").config();
+// const TwitchJS = require('twitch-js');
+// const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
+//
+// // const thirtyDaysInMilliseconds = 2.592e+9;
+// // const oneHourInMilliseconds = 3.6e+6;
+//
+// //testing times
+// const thirtyDaysInMilliseconds = 1000*60;
+// const oneHourInMilliseconds = 1000*5;
+//
+// // possible messages
+// const unknownMessage = "Sorry, couldn't understand your message. Use !info, !contact, !start, or !stop";
+// // const port = process.env.PORT;
+//
+// //connecting to twitch client
+// const options = {
+//   options:{
+//     debug:true
+//   },
+//   connection:{
+//     port: process.env.PORT || 80,
+//     secure:false,
+//     reconnect:true
+//   },
+//   identity:{
+//     username: "primereminderbot1",
+//     password: process.env.PASSWORD
+//   },
+//   channels: ["#BandsWithLegends"]
+// };
+//
+// const client = new TwitchJS.client(options);
+// // console.log("Client:", client);
+// console.log("Client.readystate:",client.readyState());
+//
+// client.on("connecting", function (address, port) {
+//   console.log("Connecting: ", address, port);
+//   client.whisper("bandswithlegends", `Connecting on ${address} ${port}`)
+// });
+// // See when someone subscribes with twitch prime
+// // client.on("subscription", (channel, username, method, message, user) => {
+//   // if(method==="prime"){
 // client.on("chat", async (channel, user, message, self) => {
 //   const {username} = user;
 //   if(message==="prime"){
@@ -103,11 +103,11 @@ console.log("Client.getOptions():",client.getOptions());
 //     .catch(err => console.log("Error in check database: ", err))
 // }
 // setInterval(() => checkDatabase(), oneHourInMilliseconds);
-
-client.connect();
-
+//
+// client.connect();
+//
 // module.exports = {oneHourInMilliseconds, thirtyDaysInMilliseconds, checkDatabase, oneMonthOld, formatChannelName};
-
-
-
-
+//
+//
+//
+//
