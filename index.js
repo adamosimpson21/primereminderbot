@@ -1,5 +1,6 @@
 require("dotenv").config();
 const tmi = require("tmi.js");
+const TwitchJS = require('twitch-js');
 const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
 
 // const thirtyDaysInMilliseconds = 2.592e+9;
@@ -19,7 +20,8 @@ const options = {
     debug:true
   },
   connection:{
-    port: 2341,
+    port: port,
+    secure:false,
     reconnect:true
   },
   identity:{
