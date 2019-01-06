@@ -1,5 +1,5 @@
 // require("dotenv").config();
-// const TwitchJS = require('twitch-js');
+const TwitchJS = require('twitch-js');
 // const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
 //
 // // const thirtyDaysInMilliseconds = 2.592e+9;
@@ -11,28 +11,29 @@
 //
 // // possible messages
 // const unknownMessage = "Sorry, couldn't understand your message. Use !info, !contact, !start, or !stop";
-// // const port = process.env.PORT;
+const port = process.env.PORT;
 //
 // //connecting to twitch client
-// const options = {
-//   options:{
-//     debug:true
-//   },
-//   connection:{
-//     port: process.env.PORT || 80,
-//     secure:false,
-//     reconnect:true
-//   },
-//   identity:{
-//     username: "primereminderbot1",
-//     password: process.env.PASSWORD
-//   },
-//   channels: ["#BandsWithLegends"]
-// };
+const options = {
+  options:{
+    debug:true
+  },
+  connection:{
+    port: process.env.PORT || 80,
+    secure:false,
+    reconnect:true
+  },
+  identity:{
+    username: "primereminderbot1",
+    password: process.env.PASSWORD
+  },
+  channels: ["#BandsWithLegends"]
+};
 //
-// const client = new TwitchJS.client(options);
-// // console.log("Client:", client);
-// console.log("Client.readystate:",client.readyState());
+const client = new TwitchJS.client(options);
+console.log("Client:", client);
+console.log("Client.readystate:",client.readyState());
+console.log("Client.getOptions:",client.getOptions());
 //
 // client.on("connecting", function (address, port) {
 //   console.log("Connecting: ", address, port);
