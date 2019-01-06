@@ -35,6 +35,10 @@ const client = new tmi.client(options);
 
 client.connect();
 
+client.on("connected", function (address, port) {
+  console.log("Connected: ", address, port);
+  client.whisper("bandswithlegends", `Connected on ${address} ${port}`)
+});
 // See when someone subscribes with twitch prime
 // client.on("subscription", (channel, username, method, message, user) => {
   // if(method==="prime"){
