@@ -1,4 +1,4 @@
-// require("dotenv").config();
+require("dotenv").config();
 const TwitchJS = require('twitch-js');
 // const {createSub, changeBlackList, reSubbed, findSub, findSubByTime} = require('./handlers.js');
 //
@@ -35,15 +35,16 @@ console.log("Client:", client);
 console.log("Client.readystate:",client.readyState());
 console.log("Client.getOptions:",client.getOptions());
 //
-// client.on("connecting", function (address, port) {
-//   console.log("Connecting: ", address, port);
-//   client.whisper("bandswithlegends", `Connecting on ${address} ${port}`)
-// });
+client.on("connecting", function (address, port) {
+  console.log("Connecting: ", address, port);
+  client.whisper("bandswithlegends", `Connecting on ${address} ${port}`)
+});
 // // See when someone subscribes with twitch prime
 // // client.on("subscription", (channel, username, method, message, user) => {
 //   // if(method==="prime"){
-// client.on("chat", async (channel, user, message, self) => {
-//   const {username} = user;
+client.on("chat", async (channel, user, message, self) => {
+  const {username} = user;
+  client.whisper(username, "You are here");
 //   if(message==="prime"){
 //     let foundSub = await findSub(username);
 //     if(foundSub){
@@ -56,7 +57,7 @@ console.log("Client.getOptions:",client.getOptions());
 //         .catch(err => console.log("Error in new sub:", err));
 //     }
 //   }
-// })
+})
 //
 // // whisper commands
 // client.on("whisper", async (from, userstate, message, self) => {
@@ -105,7 +106,7 @@ console.log("Client.getOptions:",client.getOptions());
 // }
 // setInterval(() => checkDatabase(), oneHourInMilliseconds);
 //
-// client.connect();
+client.connect();
 //
 // module.exports = {oneHourInMilliseconds, thirtyDaysInMilliseconds, checkDatabase, oneMonthOld, formatChannelName};
 //
