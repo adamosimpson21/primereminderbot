@@ -12,7 +12,7 @@ const oneHourInMilliseconds = 1000*5;
 
 // possible messages
 const unknownMessage = "Sorry, couldn't understand your message. Use !info, !contact, !start, or !stop";
-const port = process.env.PORT;
+// const port = process.env.PORT;
 
 //connecting to twitch client
 const options = {
@@ -20,7 +20,7 @@ const options = {
     debug:true
   },
   connection:{
-    port: port,
+    port: process.env.PORT,
     secure:false,
     reconnect:true
   },
