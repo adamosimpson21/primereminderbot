@@ -20,7 +20,8 @@ const options = {
     debug:true
   },
   connection:{
-    port: process.env.PORT,
+    port: process.env.PORT || 80,
+    secure:false,
     reconnect:true
   },
   identity:{
