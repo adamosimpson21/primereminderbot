@@ -32,6 +32,7 @@ const options = {
 };
 
 const client = new tmi.client(options);
+console.log("Client:", client);
 
 client.connect();
 
