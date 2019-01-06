@@ -21,7 +21,6 @@ const options = {
   },
   connection:{
     port: process.env.PORT,
-    secure:false,
     reconnect:true
   },
   identity:{
@@ -31,10 +30,8 @@ const options = {
   channels: ["#BandsWithLegends"]
 };
 
-const client = new tmi.client(options);
+const client = new TwitchJS.client(options);
 console.log("Client:", client);
-
-client.connect();
 
 client.on("connecting", function (address, port) {
   console.log("Connecting: ", address, port);
@@ -105,6 +102,8 @@ function checkDatabase(){
     .catch(err => console.log("Error in check database: ", err))
 }
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
+
+client.connect();
 
 module.exports = {oneHourInMilliseconds, thirtyDaysInMilliseconds, checkDatabase, oneMonthOld, formatChannelName};
 
