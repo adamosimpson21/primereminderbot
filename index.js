@@ -65,10 +65,10 @@ client.on("subscription", async (channel, username, method, message, user) => {
 // whisper commands
 client.on("whisper", async (from, userstate, message, self) => {
   if(self) return;
-  const {username} = userstate
+  const {username} = userstate;
   if(message === '!info') {
     client.whisper(username, infoMessage)
-  } else if(message === '!contact'){
+  } else if(message === '!contact' || message==='!contact '){
     client.whisper(username, "Contact the maintainer of this bot through http://www.bandswithlegends.com/ , or @BandsWithLegends on Twitch, Twitter, Youtube, or Discord")
   } else if(message === '!stop'){
     changeBlackList(username, true)
@@ -87,6 +87,9 @@ client.on("whisper", async (from, userstate, message, self) => {
     } else {
      client.whisper(username, "Sorry, couldn't understand your date. Use '!set now' or '!set X' where X is the number of days since you subscribed")
     }
+  } else if(message.includes('!contact ')){
+    const contactMessage = message.slice(8);
+    client.whisper('#bandswithlegends', username + "says" + contactMessage);
   } else {
     client.whisper(username, unknownMessage)
   }
