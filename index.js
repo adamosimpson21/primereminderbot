@@ -1,7 +1,7 @@
 require("dotenv").config();
 const TwitchJS = require('twitch-js');
-import {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} from './handlers.js';
-import Queue from './Queue';
+const {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} = require('./handlers.js');
+const Queue = require('./Queue');
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
@@ -123,8 +123,9 @@ function checkDatabase(){
 }
 
 const messageQueue = new Queue();
-function checkForMessage(){
-  return true
+function checkForMessages(){
+  // if (messageQueue.length > 0 )
+  console.log("You are here");
 }
 
 setInterval(() => checkForMessages(), messageBufferLengthInMS)
@@ -132,7 +133,7 @@ setInterval(() => checkDatabase(), oneHourInMilliseconds);
 
 client.connect();
 
-module.exports = {oneHourInMilliseconds, thirtyDaysInMilliseconds, checkDatabase, oneMonthOld, formatChannelName};
+module.exports = {oneHourInMilliseconds, thirtyDaysInMilliseconds, checkDatabase, oneMonthOld, formatChannelName, checkForMessages};
 
 
 
