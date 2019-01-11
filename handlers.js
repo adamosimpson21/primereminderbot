@@ -60,6 +60,13 @@ exports.setLastSubbed = async function(username, time){
   }
 }
 
+exports.createDB = async function(){
+  try{
+    await db.DataBase.create()
+  } catch(err){
+    console.log(err)
+  }
+}
 
 
 module.exports = exports;

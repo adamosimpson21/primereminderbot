@@ -1,9 +1,11 @@
 require("dotenv").config();
 const TwitchJS = require('twitch-js');
-const {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} = require('./handlers.js');
+import {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} from './handlers.js';
+import Queue from './Queue';
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
+const messageBufferLengthInMS = 50;
 
 //testing times
 // const thirtyDaysInMilliseconds = 1000*60;
@@ -119,6 +121,13 @@ function checkDatabase(){
     })
     .catch(err => console.log("Error in check database: ", err))
 }
+
+const messageQueue = new Queue();
+function checkForMessage(){
+  return true
+}
+
+setInterval(() => checkForMessages(), messageBufferLengthInMS)
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
 
 client.connect();

@@ -24,13 +24,14 @@ const subSchema = new mongoose.Schema({
   }
 })
 
-// const dataBaseSchema = new mongoose.Schema({
-//   infoMessage: {
-//     type: Number,
-//     default:0
-//   }
-// })
+const dataBaseSchema = new mongoose.Schema({
+  infoMessage: {
+    type: Number,
+    default:0
+  }
+})
 
 const Sub = mongoose.model("Sub", subSchema);
+const DataBase = mongoose.model("DataBase", dataBaseSchema);
 
-module.exports.Sub = Sub;
+module.exports = {Sub, DataBase};
