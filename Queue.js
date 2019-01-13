@@ -27,9 +27,9 @@ let myFunc = function(num){
 }
 function checkForMessages(){
   // if (messageQueue.length > 0 )
-  console.log(messageQueue.elements);
+  // console.log(messageQueue.elements);
   console.log(messageQueue.elements.push(myFunc(321)));
-  console.log(messageQueue.elements);
+  // console.log(messageQueue.elements);
   console.log(messageQueue.elements.shift());
   console.log(messageQueue.elements.shift());
   console.log(messageQueue);
