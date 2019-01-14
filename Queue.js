@@ -1,5 +1,5 @@
 // module.exports = class Queue {
-let Queue = class {
+class Queue {
   constructor(...elements) {
     // Initializing the queue with given arguments
     this.elements = [...elements];
@@ -21,7 +21,7 @@ let Queue = class {
 }
 
 
-const messageQueue = new Queue('something');
+const messageQueue = new Queue(0,2);
 let myFunc = function(num){
   console.log('helpmeImafunction', num)
 }

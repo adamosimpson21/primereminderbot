@@ -122,13 +122,13 @@ function checkDatabase(){
     .catch(err => console.log("Error in check database: ", err))
 }
 
-const messageQueue = new Queue();
+// const messageQueue = new Queue();
 function checkForMessages(){
   // if (messageQueue.length > 0 )
   console.log("You are here");
 }
 
-setInterval(() => checkForMessages(), messageBufferLengthInMS)
+// setInterval(() => checkForMessages(), messageBufferLengthInMS)
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
 
 client.connect();
