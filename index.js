@@ -1,7 +1,9 @@
-require("dotenv").config();
-const TwitchJS = require('twitch-js');
-const {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} = require('./handlers.js');
-const Queue = require('./Queue');
+import dotenv from 'dotenv';
+dotenv.config();
+// const TwitchJS = require('twitch-js');
+import TwitchJS from 'twitch-js';
+import {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} from './handlers.js';
+import Queue from './Queue';
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
@@ -17,8 +19,7 @@ const createMessage = "Thanks for subscribing with Twitch Prime. I'll remind you
 const infoMessage = "I'm a bot made to help people manage their Twitch Prime subscriptions. Subscribe with Twitch Prime while in a participating channel, or whisper !create to me to start service";
 const stopMessage = "Service Stopped. If you'd like to restart service message me !start";
 const setInfoMessage = "Set up a reminder by using !set. If you just subscribed with Twitch Prime use '!set now' or '!set X' where X is how many days ago you subscribed. Ex: Today is the 9th, but your subscription was used on the 2nd: !set 7";
-const port = process.env.PORT;
-//
+
 //connecting to twitch client
 const options = {
   options:{
@@ -35,7 +36,7 @@ const options = {
   },
   channels: ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick"]
 };
-//
+
 const client = new TwitchJS.client(options);
 
 client.on("connected", function (address, port) {

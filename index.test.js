@@ -1,4 +1,4 @@
-const {oneMonthOld, checkDatabase, thirtyDaysInMilliseconds, oneHourInMilliseconds, formatChannelName} = require("./index");
+const {oneMonthOld, checkDatabase, thirtyDaysInMilliseconds, oneHourInMilliseconds, formatChannelName} = require("./index.js");
 
 const oldDate = Date.now() - thirtyDaysInMilliseconds - thirtyDaysInMilliseconds;
 const oneMonthAndOneHourAgo = Date.now() - thirtyDaysInMilliseconds + oneHourInMilliseconds;
