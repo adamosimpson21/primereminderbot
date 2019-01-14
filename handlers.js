@@ -68,5 +68,12 @@ exports.createDB = async function(){
   }
 }
 
+exports.logError = async function(message){
+  try{
+    await db.Error.create({errorMessage:message})
+  } catch(err){
+    console.log(err)
+  }
+}
 
 module.exports = exports;

@@ -31,7 +31,17 @@ const dataBaseSchema = new mongoose.Schema({
   }
 })
 
+const errorSchema = new mongoose.Schema({
+  errorMessage:{
+    type:String,
+    required:true
+  }
+},{
+  timestamps:true
+})
+
 const Sub = mongoose.model("Sub", subSchema);
+const Error = mongoose.model("Error", errorSchema);
 const DataBase = mongoose.model("DataBase", dataBaseSchema);
 
-module.exports = {Sub, DataBase};
+module.exports = {Sub, Error, DataBase};

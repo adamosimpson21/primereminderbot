@@ -1,5 +1,4 @@
-// module.exports = class Queue {
-class Queue {
+module.exports = class Queue {
   constructor(...elements) {
     // Initializing the queue with given arguments
     this.elements = [...elements];
@@ -21,18 +20,18 @@ class Queue {
 }
 
 
-const messageQueue = new Queue(0,2);
-let myFunc = function(num){
-  console.log('helpmeImafunction', num)
-}
-function checkForMessages(){
-  // if (messageQueue.length > 0 )
-  // console.log(messageQueue.elements);
-  console.log(messageQueue.elements.push(myFunc(321)));
-  // console.log(messageQueue.elements);
-  console.log(messageQueue.elements.shift());
-  console.log(messageQueue.elements.shift());
-  console.log(messageQueue);
-}
+// const messageQueue = new Queue(0,2);
+// let myFunc = function(num){
+//   console.log('helpmeImafunction', num)
+// }
+// function checkForMessages(){
+//   // if (messageQueue.length > 0 )
+//   // console.log(messageQueue.elements);
+//   console.log(messageQueue.elements.push(myFunc(321)));
+//   // console.log(messageQueue.elements);
+//   console.log(messageQueue.elements.shift());
+//   console.log(messageQueue.elements.shift());
+//   console.log(messageQueue);
+// }
 
-module.exports = {checkForMessages}
+// module.exports = {checkForMessages}

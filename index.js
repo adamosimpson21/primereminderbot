@@ -1,9 +1,7 @@
-import dotenv from 'dotenv';
-dotenv.config();
-// const TwitchJS = require('twitch-js');
-import TwitchJS from 'twitch-js';
-import {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed} from './handlers.js';
-import Queue from './Queue';
+require('dotenv').config();
+const TwitchJS = require('twitch-js');
+const {createSub, changeBlackList, reSubbed, findSub, findSubByTime, setLastSubbed, logError}  = require('./handlers.js');
+const Queue = require('./Queue');
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
@@ -12,13 +10,21 @@ const messageBufferLengthInMS = 50;
 //testing times
 // const thirtyDaysInMilliseconds = 1000*60;
 // const oneHourInMilliseconds = 1000*5;
+// me
+const myUserName = 'bandswithlegends'
+
+// Channels to connect to TODO: ask more streamers about this bot
+const channels = ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick"];
+const port = process.env.PORT || 80;
 
 // possible messages
-const unknownMessage = "Sorry, couldn't understand your message. Use !info, !contact, !start, !set, or !stop";
-const createMessage = "Thanks for subscribing with Twitch Prime. I'll remind you in 30 days that your free re-subscription is ready. You can stop this service with !stop";
-const infoMessage = "I'm a bot made to help people manage their Twitch Prime subscriptions. Subscribe with Twitch Prime while in a participating channel, or whisper !create to me to start service";
-const stopMessage = "Service Stopped. If you'd like to restart service message me !start";
-const setInfoMessage = "Set up a reminder by using !set. If you just subscribed with Twitch Prime use '!set now' or '!set X' where X is how many days ago you subscribed. Ex: Today is the 9th, but your subscription was used on the 2nd: !set 7";
+const unknownMessage    = "Sorry, couldn't understand your message. Use !info, !contact, !start, !set, or !stop";
+const createMessage     = "Thanks for subscribing with Twitch Prime. I'll remind you in 30 days that your free re-subscription is ready. You can stop this service with !stop";
+const infoMessage       = "I'm a bot made to help people manage their Twitch Prime subscriptions. Subscribe with Twitch Prime while in a participating channel, or whisper !create to me to start service";
+const stopMessage       = "Service Stopped. If you'd like to restart service message me !start";
+const setInfoMessage    = "Set up a reminder by using !set. If you just subscribed with Twitch Prime use '!set now' or '!set X' where X is how many days ago you subscribed. Ex: Today is the 9th, but your subscription was used on the 2nd: !set 7";
+const contactMessage    = "Contact the maintainer of this bot through http://www.bandswithlegends.com/ , or @BandsWithLegends on Twitch, Twitter, Youtube, or Discord";
+const wrongDateMessage  = "Sorry, couldn't understand your date. Use '!set now' or '!set X' where X is the number of days since you subscribed";
 
 //connecting to twitch client
 const options = {
@@ -26,7 +32,7 @@ const options = {
     debug:true
   },
   connection:{
-    port: process.env.PORT || 80,
+    port,
     secure:false,
     reconnect:true
   },
@@ -34,32 +40,27 @@ const options = {
     username: "primereminderbot1",
     password: process.env.PASSWORD
   },
-  channels: ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick"]
+  channels
 };
 
 const client = new TwitchJS.client(options);
 
 client.on("connected", function (address, port) {
-  console.log("Connected: ", address, port);
-  client.whisper("bandswithlegends", `Connected on ${address} ${port}`)
+  messageQueue.push([myUserName, `Connected on ${address} ${port}`])
 });
 
 client.on("subscription", async (channel, username, method, message, user) => {
-// See when someone subscribes with twitch prime
-// client.on("chat", async (channel, user, message, self) => {
-//   const {username} = user;
-// if(message==="prime"){
-//   console.log("Sub info: ",channel, username, method, message, user)
+  // See when someone subscribes with twitch prime
   if(method.prime){
-    let foundSub = await findSub(username);
+    let foundSub = await findSub(username).catch(logError);
     if(foundSub){
       reSubbed(username, channel)
-        .then(sub => !sub.blacklist && client.whisper(sub.username, `Thanks, ${sub.username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`))
-        .catch(err => console.log("Error in Resub: ", err))
+        .then(sub => !sub.blacklist && messageQueue.push([sub.username, `Thanks, ${sub.username}, for subscribing with Twitch Prime again. Counter reset for 30 days.`]))
+        .catch(logError)
     } else {
       createSub(username, channel, Date.now(), false)
-        .then(sub => client.whisper(sub.username, createMessage))
-        .catch(err => console.log("Error in new sub:", err));
+        .then(sub => messageQueue.push([sub.username, createMessage]))
+        .catch(logError);
     }
   }
 })
@@ -70,31 +71,33 @@ client.on("whisper", async (from, userstate, message, self) => {
   if(self) return;
   const {username} = userstate;
   if(message === '!info') {
-    client.whisper(username, infoMessage)
+    messageQueue.push([username, infoMessage])
   } else if(message === '!contact' || message==='!contact '){
-    client.whisper(username, "Contact the maintainer of this bot through http://www.bandswithlegends.com/ , or @BandsWithLegends on Twitch, Twitter, Youtube, or Discord")
+    messageQueue.push([username, contactMessage])
   } else if(message === '!stop'){
     changeBlackList(username, true)
-      .then(sub => client.whisper(sub.username, stopMessage))
-      .catch(err => console.log("Blacklist change error: ", err))
+      .then(sub => messageQueue.push([sub.username, stopMessage]))
+      .catch(logError)
   } else if(message ==='!start'){
     changeBlackList(username, false)
-      .then(sub => client.whisper(sub.username, "Service restarted"))
-      .catch(err => console.log("Blacklist change error: ", err))
+      .then(sub => messageQueue.push([sub.username, "Service started"]))
+      .catch(logError)
   } else if(message ==='!set'){
-    client.whisper(username, setInfoMessage)
+    messageQueue.push([username, setInfoMessage])
   } else if(message.includes('!set')){
     const time = message.split(' ')[1];
-    if(time==='now' || !isNan(time)){
+    if(time==='now' || !isNaN(time)){
       setLastSubbed(username, time)
+        .then(sub => messageQueue.push([sub.username, `Date set to ${time} days ago`]))
+        .catch(logError)
     } else {
-     client.whisper(username, "Sorry, couldn't understand your date. Use '!set now' or '!set X' where X is the number of days since you subscribed")
+      messageQueue.push([username, wrongDateMessage])
     }
   } else if(message.includes('!contact ')){
     const contactMessage = message.slice(8);
-    client.whisper('#bandswithlegends', username + "says" + contactMessage);
+    messageQueue.push([myUserName, `${username} says: ${contactMessage}`]);
   } else {
-    client.whisper(username, unknownMessage)
+    messageQueue.push([username, unknownMessage])
   }
 })
 
@@ -120,16 +123,18 @@ function checkDatabase(){
         })
       }
     })
-    .catch(err => console.log("Error in check database: ", err))
+    .catch(logError)
 }
 
-// const messageQueue = new Queue();
+const messageQueue = new Queue();
 function checkForMessages(){
-  // if (messageQueue.length > 0 )
-  console.log("You are here");
+  if (messageQueue.length > 0 ){
+    const outGoingMessage = messageQueue.shift();
+    client.whisper(outGoingMessage[0], outGoingMessage[1]);
+  }
 }
 
-// setInterval(() => checkForMessages(), messageBufferLengthInMS)
+setInterval(() => checkForMessages(), messageBufferLengthInMS)
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
 
 client.connect();
