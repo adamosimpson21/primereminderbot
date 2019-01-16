@@ -60,14 +60,6 @@ exports.setLastSubbed = async function(username, time){
   }
 }
 
-exports.createDB = async function(){
-  try{
-    await db.DataBase.create()
-  } catch(err){
-    console.log(err)
-  }
-}
-
 exports.logError = async function(message){
   try{
     await db.Error.create({errorMessage:message})

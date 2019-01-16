@@ -24,13 +24,6 @@ const subSchema = new mongoose.Schema({
   }
 })
 
-const dataBaseSchema = new mongoose.Schema({
-  infoMessage: {
-    type: Number,
-    default:0
-  }
-})
-
 const errorSchema = new mongoose.Schema({
   errorMessage:{
     type:String,
@@ -42,6 +35,5 @@ const errorSchema = new mongoose.Schema({
 
 const Sub = mongoose.model("Sub", subSchema);
 const Error = mongoose.model("Error", errorSchema);
-const DataBase = mongoose.model("DataBase", dataBaseSchema);
 
-module.exports = {Sub, Error, DataBase};
+module.exports = {Sub, Error};

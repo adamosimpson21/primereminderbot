@@ -5,7 +5,7 @@ const Queue = require('./Queue');
 
 const thirtyDaysInMilliseconds = 2.592e+9;
 const oneHourInMilliseconds = 3.6e+6;
-const messageBufferLengthInMS = 50;
+const messageBufferLengthInMS = 1500;
 
 //testing times
 // const thirtyDaysInMilliseconds = 1000*60;
@@ -14,7 +14,7 @@ const messageBufferLengthInMS = 50;
 const myUserName = 'bandswithlegends'
 
 // Channels to connect to TODO: ask more streamers about this bot
-const channels = ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick"];
+const channels = ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick", "#amazonian"];
 const port = process.env.PORT || 80;
 
 // possible messages
@@ -23,7 +23,7 @@ const createMessage     = "Thanks for subscribing with Twitch Prime. I'll remind
 const infoMessage       = "I'm a bot made to help people manage their Twitch Prime subscriptions. Subscribe with Twitch Prime while in a participating channel, or whisper !create to me to start service";
 const stopMessage       = "Service Stopped. If you'd like to restart service message me !start";
 const setInfoMessage    = "Set up a reminder by using !set. If you just subscribed with Twitch Prime use '!set now' or '!set X' where X is how many days ago you subscribed. Ex: Today is the 9th, but your subscription was used on the 2nd: !set 7";
-const contactMessage    = "Contact the maintainer of this bot through http://www.bandswithlegends.com/ , or @BandsWithLegends on Twitch, Twitter, Youtube, or Discord";
+const contactMessage    = "Contact the maintainer of this bot through http://www.bandswithlegends.com/ , or @BandsWithLegends on Twitch, Twitter, Youtube, or Discord. You can also use !contact {message} to send a message to Bands through the bot!";
 const wrongDateMessage  = "Sorry, couldn't understand your date. Use '!set now' or '!set X' where X is the number of days since you subscribed";
 
 //connecting to twitch client
