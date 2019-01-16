@@ -49,11 +49,7 @@ exports.reSubbed = async function(username, channel){
 
 exports.setLastSubbed = async function(username, time){
   try{
-    let lastSubbed = Date.now();
-    if(parseInt(time)>=1 && parseInt(time) <=30){
-      // user can set
-      lastSubbed = Date.now() - (oneDayInMilliseconds * parseInt(time));
-    }
+    let lastSubbed = Date.now() - (oneDayInMilliseconds * parseInt(time));
     return await db.Sub.findOneAndUpdate({username}, {lastSubbed})
   } catch(err){
     return err;
