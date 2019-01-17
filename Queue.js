@@ -7,8 +7,8 @@ module.exports = class Queue {
   push(...args) {
     return this.elements.push(...args);
   }
-  shift(...args) {
-    return this.elements.shift(...args);
+  shift() {
+    return this.elements.shift();
   }
   // Add some length utility methods
   get length() {
