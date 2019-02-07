@@ -14,7 +14,7 @@ const messageBufferLengthInMS = 1500;
 const myUserName = 'bandswithlegends'
 
 // Channels to connect to TODO: ask more streamers about this bot
-const channels = ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick", "#amazonian", "#daughterjudyk"];
+const channels = ["#BandsWithLegends", "#tvgbadger", "#gamesdonequick", "#amazonian", "#daughterjudyk", "#cacophonie"];
 const port = process.env.PORT || 80;
 
 // possible messages
@@ -118,13 +118,12 @@ function checkDatabase(){
   console.log("Checking Database: ", Date.now())
   findSubByTime(oneHourInMilliseconds)
     .then(availableSubs => {
-      console.log("AvailableSubs:", availableSubs)
       if(availableSubs.length >= 0) {
         availableSubs.forEach(user => {
           const {blacklist, username, channel} = user;
           if (!blacklist) {
             const channelName = formatChannelName(channel);
-            client.whisper(username, `Your twitch prime sub is available. To re-sub to ${channelName} go to https://www.twitch.tv/${channelName} . Use the command !set now to reset timer for 30 days`)
+            messageQueue.push([username, `Your twitch prime sub is available. To re-sub to ${channelName} go to https://www.twitch.tv/${channelName} . Use the command !set now to reset timer for 30 days`])
           }
         })
       }
@@ -143,6 +142,7 @@ function checkForMessages(){
 }
 
 setInterval(() => checkForMessages(), messageBufferLengthInMS);
+setTimeout(() => checkDatabase(), 0);
 setInterval(() => checkDatabase(), oneHourInMilliseconds);
 
 client.connect();
